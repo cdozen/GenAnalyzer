@@ -1,0 +1,46 @@
+=======27 November 2020 Friday========
+
+2018 SPS JJ samples with no gen cut :
+config.Data.inputDataset ='/SPSToJJ_13TeV_pythia8/zhenhu-crab_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-GENSIM-SPSTo4mu-noGenCut-v1-7beb0e22b11525f1abd96d186df735fb/USER'
+output: /eos/uscms/store/user/cdozen/FourMuon_Analysis/SPS_JJ_2018_pythia8_Ntuples_v2/noGenCut/SPSToJJ_13TeV_pythia8/crab_crabOutput2018_SPS_JJ_v2/201127_182339/0000/
+
+2018 DPS JJ with gen filter samples:
+config.Data.inputDataset = '/DPSTo4mu_13TeV_pythia8/zhenhu-BPHSkim-v3-RunIIAutumn18MiniAOD-d2e730fa23c2d26c2f10ec533461faef/USER'
+output: /eos/uscms/store/user/cdozen/FourMuon_Analysis/DPS_MC_Ntuples/GenFilter_v2/DPSTo4mu_13TeV_pythia8/crab_crabOutput2018_DPSMCJJ_withgenfilter/201107_133922/0000/
+
+2018 DPS JJ without gen filter samples:
+config.Data.inputDataset ='/DPSToJJ_13TeV_pythia8/zhenhu-crab_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-GENSIM-DPSTo4mu-noGenCut-v2-391455752ee5283724f21c0b29d91758/USER'
+output: /eos/uscms/store/user/cdozen/FourMuon_Analysis/DPS_MC_Ntuples/No_GenFilter_v2/DPSToJJ_13TeV_pythia8/crab_crabOutput2018_DPSMCJJ_NoGenCut/201016_183241/0000/
+
+++++++++++The produced Ntuples used for the PlotMaker code++++++++++
+Add new branches and w/wo eta-pt cuts on Muons
+
+/uscms/home/cdozen/nobackup/Saving/CMSSW_10_2_5/src/GenAnalyzer/GenAnalyzer/test/PlotMaker/
+
+Main code :
+gen_tree.C–>will create new output root files with added new branches and cuts
+
+Add new generated ntuples in main.cpp
+To run it:
+Make // will crate .exe file
+./main.exe
+
+=================================================================================================================================================================================================
+All generated root files are located in:
+/afs/cern.ch/work/c/cdozen/public/forBS/ROOTFiles/
+
+-7Nov2020_DPSJJ_WITH_genfilter_2018_NO_etptcut.root
+-7Nov2020_DPSJJ_WITH_genfilter_2018_WITH_etptcut.root
+-8Nov2020_DPSJJ_with_genfilter_2018_with_etptcut_muonid.root
+-8Nov2020_DPSJJ_with_genfilter_2018_NO_etptcut_muonid.root
+
+=================================================================================================================================================================================================
+++++++(*"…muonid.root" files were generated with modified plotmaker code (added muonid branch): gen_tree_withmucharge.C) located in /uscms/home/cdozen/nobackup/Saving/CMSSW_10_2_5/src/GenAnalyzer/GenAnalyzer/test/PlotMaker--
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Then Event Mixing:
+/uscms/home/cdozen/nobackup/Saving/CMSSW_10_2_5/src/GenAnalyzer/GenAnalyzer/test/EVENT_MIXING
+
+lxplus area:
+/afs/cern.ch/work/c/cdozen/public/forBS/
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

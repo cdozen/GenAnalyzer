@@ -1,0 +1,10 @@
+universe = vanilla
+Executable = Run_0.sh
+Should_Transfer_Files = YES
+Transfer_Input_Files = Run_0.sh,DoubleJpsi_mix_noetapt_0.cxx
+WhenToTransferOutput = ON_EXIT
+Output = condor_treewriter_$(Cluster)_$(Process).stdout
+Error = condor_treewriter_$(Cluster)_$(Process).stderr
+Log = condor_treewriter_$(Cluster)_$(Process).log
+x509userproxy = $ENV(X509_USER_PROXY)
+Queue 1

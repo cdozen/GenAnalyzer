@@ -1,0 +1,11 @@
+[FERMIHTC-SINGULARITY]: INFO -- No Singulariy image specified
+[FERMIHTC-SINGULARITY]: INFO -- Running job on the host machine
+
+[FERMIHTC-SINGULARITY]: INFO -- Running ./condor_exec.exe
+Starting job on  Sun Nov 8 15:34:29 UTC 2020
+Running on: Linux cdozen-40041356-0-cmswn1944.fnal.gov 3.10.0-1127.19.1.el7.x86_64 #1 SMP Thu Aug 20 14:39:03 CDT 2020 x86_64 x86_64 x86_64 GNU/Linux
+System software: Scientific Linux release 7.8 (Nitrogen)
+Resetting caches
+Done: ProjectRename
+
+Processing DoubleJpsi_mix_noetapt_0.cxx...
