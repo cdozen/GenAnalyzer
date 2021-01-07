@@ -19,12 +19,9 @@ process.source = cms.Source("PoolSource",
     duplicateCheckMode = cms.untracked.string('noDuplicateCheck'),
     #skipEvents = cms.untracked.uint32(842),
     fileNames = cms.untracked.vstring(
-<<<<<<< HEAD
     #"/store/user/zhliang/JY_MC2018/vJY2s/Pythia8_DPS2JY_0/MC2018_Pythia_DPStoJY_vJY2s/201205_083943/0000/DPStoJY_GENSIM_1_2018_1.root"
         #"root://cmsxrootd.fnal.gov//store/group/l1upgrades/MC2020SPSToJJ_NoGenCut/SPSToJJ_13TeV_pythia8/crab_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-GENSIM-SPSTo4mu-noGenCut-v1/200709_040207/0000/FourMu_qqorggMC_1.root"
-=======
     "root://cmsxrootd.fnal.gov//store/group/l1upgrades/MC2020SPSToJJ_NoGenCut/SPSToJJ_13TeV_pythia8/crab_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-GENSIM-SPSTo4mu-noGenCut-v1/200709_040207/0000/FourMu_qqorggMC_455.root"
->>>>>>> 171bad94dea0bbcf48f0004946a77cb0c4a6f934
 #"file:/eos/uscms/store/group/lpcmuon/MC2020/DPSTo4mu_13TeV_pythia8/BPHSkim-v3-RunIIAutumn18MiniAOD/200713_152258/0000/BPHSkim_1.root"
 #"file:/eos/uscms/store/group/l1upgrades/MC2020DPSToJJ_NoGenCut/DPSToJJ_13TeV_pythia8/crab_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-GENSIM-DPSTo4mu-noGenCut-v2/200709_035732/0000/FourMu_DPSJJMC_102.root"        
 #"file:/eos/uscms/store/group/l1upgrades/MC2020SPSToYY_NoGenCut/SPSToYY_13TeV_pythia8/crab_RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15-GENSIM-SPSTo4mu-noGenCut-v1/200709_040832/0002/FourMu_qqorggMC_2600.root",
