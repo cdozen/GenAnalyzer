@@ -62,7 +62,7 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 
-
+#include "FourMuonAna/Onia/interface/HZZ4LGENAna.h"
 
 
 //
@@ -117,10 +117,11 @@ class GenAnalyzer : public edm::EDAnalyzer  {
       virtual void beginJob() override;
       virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
       virtual void endJob() override;
-
-       int GENfinalState;
-        bool passedFiducialSelection;
-        bool verbose=false;
+      //GEN
+      HZZ4LGENAna genAna;
+      int GENfinalState;
+       bool passedFiducialSelection;
+       bool verbose=false;
         //std::vector<double> GENmu_pt; std::vector<double> GENmu_eta; std::vector<double> GENmu_phi; std::vector<double> GENmu_mass; 
 
     std::vector<int>   GEN_Nmother;
@@ -155,7 +156,6 @@ class GenAnalyzer : public edm::EDAnalyzer  {
     std::vector<int>GEN_Dau_status;
     */
     TTree * _mytree;
-    TTree * _MMGtree;
 
      int _nEvent, _nRun, _nLumi;
 
@@ -177,7 +177,10 @@ std::vector<int>    GENmu_barcode;
 std::vector<int>    GENmu_Mom_barcode;
 std::vector<int>    GENmu_MomMom_barcode; 
 
-
+int GEN_ups1_mu1_index;
+int GEN_ups1_mu2_index;
+int GEN_ups2_mu1_index;
+int GEN_ups2_mu2_index;
 std::vector<std::vector<int>> GENups_DaughtersId;
 std::vector<std::vector<double>> GENups_Daughter_mupt;
 std::vector<std::vector<double>> GENups_Daughter_mueta;
@@ -197,6 +200,11 @@ std::vector<double> GENups_phi;
 std::vector<double> GENups_mass;
 std::vector<int> GENups_ID;
 std::vector<int> GENups_NDaughters;
+std::vector<double> GENdimu_mass;
+std::vector<double> GENdimu_pt;
+std::vector<double> GENdimu_eta;
+std::vector<double> GENdimu_y;
+std::vector<double> GENdimu_phi;
 
 //end
   
@@ -228,7 +236,6 @@ genParticleToken_ = mayConsume<vector<reco::GenParticle>>(iConfig.getParameter<e
     
     edm::Service<TFileService> fs ;
     _mytree  = fs->make < TTree >("gen_tree","gen tree");
-    _MMGtree  = fs->make < TTree >("Total_events","total events");
 
 }
 
@@ -253,7 +260,6 @@ void GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
    
    FillEvent(iEvent, iSetup);
    LogDebug("") << "After FillEvent"; 
-   _MMGtree->Fill();
 
    FillTruth(iEvent, iSetup);
    LogDebug("") << "After FillTruth"; 
@@ -322,6 +328,11 @@ GENups_phi.clear();
 GENups_mass.clear();
 GENups_ID.clear();
 GENups_NDaughters.clear();
+GENdimu_mass.clear();
+GENdimu_pt.clear();
+GENdimu_eta.clear();
+GENdimu_y.clear();
+GENdimu_phi.clear();
 }
 
 
@@ -336,9 +347,9 @@ GenAnalyzer::beginJob()
     //TLorentzVector gen_mu1_p4;
     //TLorentzVector gen_mu2_p4;
 
-_MMGtree->Branch("nEvent",&_nEvent,"nEvent/I");
-_MMGtree->Branch("nRun",&_nRun,"nRun/I");
-_MMGtree->Branch("nLumi",&_nLumi,"nLumi/I");
+_mytree->Branch("nEvent",&_nEvent,"nEvent/I");
+_mytree->Branch("nRun",&_nRun,"nRun/I");
+_mytree->Branch("nLumi",&_nLumi,"nLumi/I");
 
 _mytree->Branch("nEvent",&_nEvent,"nEvent/I");
 _mytree->Branch("nRun",&_nRun,"nRun/I");
@@ -388,6 +399,10 @@ _mytree->Branch("GENmu_id",&GENmu_id);
 _mytree->Branch("GENmu_status",&GENmu_status);
 _mytree->Branch("GENmu_MomId",&GENmu_MomId);
 _mytree->Branch("GENmu_MomMomId",&GENmu_MomMomId);
+_mytree->Branch("GEN_ups1_mu1_index",&GEN_ups1_mu1_index,"GEN_ups1_mu1_index/I");
+_mytree->Branch("GEN_ups1_mu2_index",&GEN_ups1_mu2_index,"GEN_ups1_mu2_index/I");
+_mytree->Branch("GEN_ups2_mu1_index",&GEN_ups2_mu1_index,"GEN_ups2_mu1_index/I");
+_mytree->Branch("GEN_ups2_mu2_index",&GEN_ups2_mu2_index,"GEN_ups2_mu2_index/I");
 _mytree->Branch("GENups_DaughtersId",&GENups_DaughtersId);
 _mytree->Branch("GENups_Daughter_mupt",&GENups_Daughter_mupt);
 _mytree->Branch("GENups_Daughter_mueta",&GENups_Daughter_mueta);
@@ -407,9 +422,11 @@ _mytree->Branch("GENups_phi",&GENups_phi);
 _mytree->Branch("GENups_mass",&GENups_mass);
 _mytree->Branch("GENups_ID",&GENups_ID);
 _mytree->Branch("GENups_NDaughters",&GENups_NDaughters);
-
-    
-    
+_mytree->Branch("GENdimu_mass",&GENdimu_mass);
+_mytree->Branch("GENdimu_pt",&GENdimu_pt);
+_mytree->Branch("GENdimu_eta",&GENdimu_eta);
+_mytree->Branch("GENdimu_y",&GENdimu_y);
+_mytree->Branch("GENdimu_phi",&GENdimu_phi);
     return;
 }
 
@@ -454,8 +471,9 @@ iEvent.getByToken(genParticleToken_, genCandidatesCollection);
 ////      Loop on particles
 //// ----------------------------
 int barcode=0;
-
+int j = -1;
 for( auto p = genCandidatesCollection->begin(); p != genCandidatesCollection->end(); ++ p ) {
+j++;
 barcode++;
 //if(verbose) cout << "gen part pdgid =   "  << fabs(p->pdgId()) <<     " status = "     << p->status()  <<   "    Mass =    "    << p->mass() <<    "     Pt = "  << p->pt() <<   "    Eta = "  <<  p->eta()  <<   "      Numb of Mothers  =  "  <<   p->numberOfMothers()  <<   "    Numb of Daughters=   "  <<   p->numberOfDaughters() << endl;
 
@@ -518,9 +536,9 @@ GEN_Daughter_pdgID.push_back(Temp_DaughterpdgID);
         if (abs(p->pdgId())==13) {        //if it is muon 
 
         if (!(p->status()==1)) continue; // only allow status 1 gen muons,	particle not decayed or fragmented, represents the final state as given by the generator
-        if (!(Mom->pdgId()==443 && Mom->status()==2)) continue;  // Upsilon =553
-   
-         if(verbose) cout<<"found a GEN  MUON ID : "<< p->pdgId() <<"GEN MUON status :"<<  p->status() << "GEN MUON mass: "<< p->mass() << " GEN MUON pt: " << p->pt() <<" GEN MUON eta: "<< p->eta() <<endl;
+        //if (!(Mom->pdgId()==443)) continue;
+        if (!(genAna.MotherID(&genCandidatesCollection->at(j))==443)) continue;
+        if(verbose) cout<<"found a GEN  MUON ID : "<< p->pdgId() <<"GEN MUON status :"<<  p->status() << "GEN MUON mass: "<< p->mass() << " GEN MUON pt: " << p->pt() <<" GEN MUON eta: "<< p->eta() <<endl;
            
            GENmu_id.push_back(p->pdgId());
            GENmu_status.push_back(p->status());
@@ -534,7 +552,7 @@ GEN_Daughter_pdgID.push_back(Temp_DaughterpdgID);
            //GENmu_Mom_barcode.push_back(Mom->barcode());
            //GENmu_MomMom_barcode.push_back(GrandMom->barcode()); 
              } // end Gen muons
-            if (verbose) cout<<"p id : "<<p->pdgId() << " status: "<<p->status()<<endl;
+            //if (verbose) cout<<"p id : "<<p->pdgId() << " status: "<<p->status()<<endl;
 
             if ((p->pdgId()==443) && (p->status()==2)) {
             const reco::Candidate *ups_dau0=p->daughter(0);            
@@ -599,6 +617,74 @@ GEN_Daughter_pdgID.push_back(Temp_DaughterpdgID);
         }//if mother>0
 
     } // particle loop
+     // pair status 1 muons to make Jpsi's
+               double NGEN_muons = GENmu_pt.size();
+          if (NGEN_muons < 2 ) return;
+          double  minDmass=9999.0;
+          double  UPS1_mass = -999.0;
+          double  UPS2_mass = -999.0;
+          double  UPS1_pt = -999.0;
+          double  UPS2_pt = -999.0;
+          double  UPS1_phi = -999.0;
+          double  UPS2_phi = -999.0;
+          double  UPS1_eta = -999.0;
+          double  UPS2_eta = -999.0;
+          double  UPS1_y = -999.0;
+          double  UPS2_y = -999.0;
+          GEN_ups1_mu1_index = -99;
+          GEN_ups1_mu2_index = -99;
+          GEN_ups2_mu1_index = -99;
+          GEN_ups2_mu2_index = -99;
+          for (unsigned int i=0;i<NGEN_muons;i++){
+           for (unsigned int j=i+1;j<NGEN_muons;j++){
+            if (GENmu_id[i]+GENmu_id[j]!=0) continue;
+               TLorentzVector li, lj;
+               li.SetPtEtaPhiM(GENmu_pt[i],GENmu_eta[i],GENmu_phi[i],GENmu_mass[i]);
+               lj.SetPtEtaPhiM(GENmu_pt[j],GENmu_eta[j],GENmu_phi[j],GENmu_mass[j]);
+               TLorentzVector lij = li+lj;
+               for (unsigned int k=0;k<NGEN_muons;k++){
+                 for (unsigned int l=k+1;l<NGEN_muons;l++){
+                   if (i==j || i==k || i==l || j==k || j==l || l==k ) continue;
+                    if (GENmu_id[k]+GENmu_id[l]!=0) continue;
+                    TLorentzVector lk, ll;
+                    lk.SetPtEtaPhiM(GENmu_pt[k],GENmu_eta[k],GENmu_phi[k],GENmu_mass[k]);
+                    ll.SetPtEtaPhiM(GENmu_pt[l],GENmu_eta[l],GENmu_phi[l],GENmu_mass[l]);
+                    TLorentzVector lkl = lk+ll;
+                    double this_massdiff = abs(lij.M()-lkl.M());
+                    if (this_massdiff<minDmass)
+                       {
+                      minDmass=this_massdiff;
+                      UPS1_mass = lij.M();
+                      UPS2_mass = lkl.M();
+                      UPS1_pt = lij.Pt();
+                      UPS2_pt = lkl.Pt();
+                      UPS1_phi = lij.Phi();
+                      UPS2_phi = lkl.Phi();
+                      UPS1_eta = lij.Eta();
+                      UPS2_eta = lkl.Eta();
+                      UPS1_y = lij.Rapidity();
+                      UPS2_y = lkl.Rapidity();
+                      GEN_ups1_mu1_index = i;
+                      GEN_ups1_mu2_index = j;
+                      GEN_ups2_mu1_index = k;
+                      GEN_ups2_mu2_index = l;
+                          }
+                         }
+                       }
+                      }
+                     }
+            GENdimu_mass.push_back(UPS1_mass);
+            GENdimu_mass.push_back(UPS2_mass);
+            GENdimu_pt.push_back(UPS1_pt);
+            GENdimu_pt.push_back(UPS2_pt);
+            GENdimu_eta.push_back(UPS1_eta);
+            GENdimu_eta.push_back(UPS2_eta);
+            GENdimu_y.push_back(UPS1_y);
+            GENdimu_y.push_back(UPS2_y);
+            GENdimu_phi.push_back(UPS1_phi);
+            GENdimu_phi.push_back(UPS2_phi);
+            if (verbose) cout<<" GENdimu_mass 1 :"<<UPS1_mass<<" pt : "<<UPS1_pt<<" y: "<<UPS1_y<<endl;
+            if (verbose) cout<<" GENdimu_mass 2 :"<<UPS2_mass<<" pt : "<<UPS2_pt<<" y: "<<UPS2_y<<endl;
 
 }
 
